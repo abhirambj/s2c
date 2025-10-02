@@ -50,13 +50,14 @@ const schema = defineSchema({
 		moodBoardImages: v.optional(v.array(v.string())),
 		inspirationImages: v.optional(v.array(v.string())),
 		createdAt: v.number(),
+		lastModified: v.number(),
 		isPublic: v.optional(v.boolean()),
 		tags: v.optional(v.array(v.string())),
 		projectNumber: v.number(),
 	}).index("by_userId", ["userId"]),
 	project_counters: defineTable({
 		userId: v.id("users"),
-		nexProjectNumber: v.number(),
+		nextProjectNumber: v.number(),
 	}).index("by_userId", ["userId"]),
 });
 

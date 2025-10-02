@@ -9,6 +9,7 @@ import { CircleQuestionMark, Hash, LayoutTemplate, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAppSelector } from "@/redux/store";
+import CreateProject from "../buttons/projects";
 
 type TabProps = {
 	label: string;
@@ -106,7 +107,7 @@ const Navbar = () => {
 				</Avatar>
 				{/* //TODO: add autosave and create project */}
 				{/* {hasCanvas && <Autosave />} */}
-				{/* !hasCanvas && !hasStyleGuide && <CreateProject /> */}
+				{!hasCanvas && !hasStyleGuide && <CreateProject />}
 			</div>
 		</div>
 	);
