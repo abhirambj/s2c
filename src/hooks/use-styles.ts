@@ -168,11 +168,7 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 
 		const updatedImages = images.filter((img) => {
 			if (img.id === imageId) {
-				if (
-					!img.isFromServer &&
-					img.preview &&
-					img.preview.startsWith("blob:")
-				) {
+				if (img.preview && img.preview.startsWith("blob:")) {
 					blobUrlsRef.current.delete(img.preview);
 					URL.revokeObjectURL(img.preview);
 				}
