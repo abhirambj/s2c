@@ -67,7 +67,7 @@ const projectsSlice = createSlice({
 		},
 		addProject: (state, action: PayloadAction<ProjectSummary>) => {
 			state.projects.unshift(action.payload);
-			state.total = +1;
+			state.total = state.projects.length;
 		},
 		updateProject: (state, action: PayloadAction<ProjectSummary>) => {
 			const index = state.projects.findIndex(
