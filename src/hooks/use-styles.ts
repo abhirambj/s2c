@@ -100,6 +100,7 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 
 					if (clientIndex !== -1) {
 						if (
+							mergedImages[clientIndex].preview &&
 							mergedImages[clientIndex].preview.startsWith(
 								"blob:"
 							)
@@ -107,8 +108,10 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 							URL.revokeObjectURL(
 								mergedImages[clientIndex].preview
 							);
+							mergedImages[clientIndex] = serverImg;
+						} else {
+							mergedImages[clientIndex] = serverImg;
 						}
-						mergedImages[clientIndex] = serverImg;
 					}
 				});
 				setValue("images", mergedImages);

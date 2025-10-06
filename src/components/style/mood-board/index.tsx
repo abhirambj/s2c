@@ -67,11 +67,9 @@ const MoodBoard = ({ guideImages }: Props) => {
 									const random3 =
 										((seed + 2 * 9301 + 49297) % 233280) /
 										233280;
-
 									const rotation = (random1 - 0.5) * 20;
 									const xOffset = (random2 - 0.5) * 40;
 									const yOffset = (random3 - 0.5) * 30;
-
 									return (
 										<ImagesBoard
 											key={`mobile-${image.id}`}
@@ -90,7 +88,9 @@ const MoodBoard = ({ guideImages }: Props) => {
 											isHovered={
 												hoveredImageId === image.id
 											}
-											onHoverChange={(hovering) =>
+											onHoverChange={(
+												hovering: boolean
+											) =>
 												setHoveredImageId(
 													hovering ? image.id : null
 												)
@@ -115,22 +115,18 @@ const MoodBoard = ({ guideImages }: Props) => {
 									const random3 =
 										((seed + 2 * 9301 + 49297) % 233280) /
 										233280;
-
 									const imageWidth = 192;
 									const overlapAmount = 30;
 									const spacing = imageWidth - overlapAmount;
-
 									const rotation = (random1 - 0.5) * 50;
 									const xOffset =
 										index * spacing -
 										((images.length - 1) * spacing) / 2;
 									const yOffset = (random3 - 0.5) * 30;
-
 									const zIndex =
 										hoveredImageId === image.id
 											? 9999
 											: index + 1;
-
 									return (
 										<ImagesBoard
 											key={`desktop-${image.id}`}
@@ -145,7 +141,9 @@ const MoodBoard = ({ guideImages }: Props) => {
 											isHovered={
 												hoveredImageId === image.id
 											}
-											onHoverChange={(hovering) =>
+											onHoverChange={(
+												hovering: boolean
+											) =>
 												setHoveredImageId(
 													hovering ? image.id : null
 												)
@@ -157,13 +155,11 @@ const MoodBoard = ({ guideImages }: Props) => {
 						</div>
 					</>
 				)}
-
 				{images.length === 0 && (
 					<div className="relative z-10 space-y-6">
 						<div className="mx-auto w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
 							<Upload className="w-8 h-8 text-muted-foreground" />
 						</div>
-
 						<div className="space-y-2">
 							<h3 className="text-lg font-medium text-foreground">
 								Drop your images here
@@ -173,14 +169,12 @@ const MoodBoard = ({ guideImages }: Props) => {
 								moodboard
 							</p>
 						</div>
-
 						<Button onClick={handleUploadClick} variant="outline">
 							<Upload className="w-4 h-4 mr-2" />
 							Choose Files
 						</Button>
 					</div>
 				)}
-
 				{images.length > 0 && canAddMore && (
 					<div className="absolute bottom-6 right-6 z-20">
 						<Button
@@ -193,7 +187,6 @@ const MoodBoard = ({ guideImages }: Props) => {
 						</Button>
 					</div>
 				)}
-
 				<input
 					ref={fileInputRef}
 					type="file"
@@ -203,9 +196,7 @@ const MoodBoard = ({ guideImages }: Props) => {
 					className="hidden"
 				/>
 			</div>
-			{/* //TODO: Add AI Generation */}
 			<Button className="w-fit">Generate with AI</Button>
-
 			{images.length > 5 && (
 				<div className="text-center p-5 bg-muted/50 rounded-2xl">
 					<p className="text-sm text-muted-foreground">

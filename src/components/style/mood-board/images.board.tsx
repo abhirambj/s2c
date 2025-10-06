@@ -44,6 +44,8 @@ type Props = {
 	zIndex: number;
 	marginLeft: string;
 	marginTop: string;
+	isHovered: boolean;
+	onHoverChange: (hovering: boolean) => void;
 };
 
 const ImagesBoard = ({
@@ -55,6 +57,8 @@ const ImagesBoard = ({
 	zIndex,
 	marginLeft,
 	marginTop,
+	isHovered,
+	onHoverChange,
 }: Props) => {
 	return (
 		<div
@@ -62,20 +66,27 @@ const ImagesBoard = ({
 			className="absolute group"
 			style={{
 				transform: `translate(${xOffset}px, ${yOffset}px) rotate(${rotation}deg)`,
-				zIndex: zIndex,
+				zIndex,
 				left: "50%",
 				top: "50%",
 				marginLeft: marginLeft,
 				marginTop: marginTop,
 			}}
+			onMouseEnter={() => onHoverChange(true)}
+			onMouseLeave={() => onHoverChange(false)}
+			onFocus={() => onHoverChange(true)}
+			onBlur={() => onHoverChange(false)}
+			tabIndex={0}
 		>
 			<div className="relative w-40 h-48 rounded-2xl overflow-hidden bg-white shadow-xl border border-border/20 hover:scale-105 transition-all duration-200">
-				<Image
-					src={image.preview}
-					alt="Mood board image"
-					fill
-					className="object-cover"
-				/>
+				{image.preview ? (
+					<Image
+						src={image.preview}
+						alt="Mood board image"
+						fill
+						className="object-cover"
+					/>
+				) : null}
 
 				<UploadStatus
 					uploading={image.uploading}
