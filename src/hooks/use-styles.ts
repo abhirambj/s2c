@@ -1,6 +1,6 @@
 import { useMutation } from "convex/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ export interface StylesFormData {
 }
 
 export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
+	const blobUrlsRef = useRef<Set<string>>(new Set());
 	const [dragActive, setDragActive] = useState(false);
 	const searchParams = useSearchParams();
 	const projectId = searchParams.get("project");
@@ -105,6 +106,9 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 								"blob:"
 							)
 						) {
+							blobUrlsRef.current.delete(
+								mergedImages[clientIndex].preview
+							);
 							URL.revokeObjectURL(
 								mergedImages[clientIndex].preview
 							);
@@ -123,10 +127,13 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 			return;
 		}
 
+		const blobUrl = URL.createObjectURL(file);
+		blobUrlsRef.current.add(blobUrl);
+
 		const newImage: MoodBoardImage = {
 			id: `${Date.now()}-${Math.random()}`,
 			file,
-			preview: URL.createObjectURL(file),
+			preview: blobUrl,
 			uploaded: false,
 			uploading: false,
 			isFromServer: false,
@@ -161,7 +168,12 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 
 		const updatedImages = images.filter((img) => {
 			if (img.id === imageId) {
-				if (!img.isFromServer && img.preview.startsWith("blob:")) {
+				if (
+					!img.isFromServer &&
+					img.preview &&
+					img.preview.startsWith("blob:")
+				) {
+					blobUrlsRef.current.delete(img.preview);
 					URL.revokeObjectURL(img.preview);
 				}
 				return false;
@@ -268,9 +280,10 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 
 	useEffect(() => {
 		return () => {
-			images.forEach((image) => {
-				URL.revokeObjectURL(image.preview);
+			blobUrlsRef.current.forEach((url) => {
+				URL.revokeObjectURL(url);
 			});
+			blobUrlsRef.current.clear();
 		};
 	}, []);
 
