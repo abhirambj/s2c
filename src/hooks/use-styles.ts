@@ -108,10 +108,8 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 							URL.revokeObjectURL(
 								mergedImages[clientIndex].preview
 							);
-							mergedImages[clientIndex] = serverImg;
-						} else {
-							mergedImages[clientIndex] = serverImg;
 						}
+						mergedImages[clientIndex] = serverImg;
 					}
 				});
 				setValue("images", mergedImages);
