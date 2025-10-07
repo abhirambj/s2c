@@ -89,7 +89,7 @@ export const mockStyleGuide: StyleGuide = {
 	],
 	typographySections: [
 		{
-			title: "Headings",
+			title: "Headings — Fun",
 			styles: [
 				{
 					name: "Heading 1",
