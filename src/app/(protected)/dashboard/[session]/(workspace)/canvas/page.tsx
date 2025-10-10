@@ -1,5 +1,4 @@
 import InfiniteCanvas from "@/components/canvas";
-import ProjectsProvider from "@/components/projects/list/provider";
 import ProjectProvider from "@/components/projects/provider";
 import { ProjectQuery } from "@/convex/query.config";
 import React from "react";
@@ -29,7 +28,14 @@ const Page = async ({ searchParams }: CanvasPageProps) => {
 		);
 	}
 
-	if (!project) {
+	const projectValue =
+		typeof project === "object" &&
+		project !== null &&
+		"_valueJSON" in project
+			? (project as any)._valueJSON
+			: undefined;
+
+	if (!projectValue) {
 		return (
 			<div className="w-full h-screen flex items-center justify-center">
 				<p className="text-red-500">
@@ -39,7 +45,7 @@ const Page = async ({ searchParams }: CanvasPageProps) => {
 		);
 	}
 	return (
-		<ProjectProvider initialProject={project}>
+		<ProjectProvider initialProject={{ _valueJSON: projectValue }}>
 			<InfiniteCanvas />
 		</ProjectProvider>
 	);

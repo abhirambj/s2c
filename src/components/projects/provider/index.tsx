@@ -7,7 +7,9 @@ import React, { useEffect } from "react";
 
 type Props = {
 	children: React.ReactNode;
-	initialProject: { _valueJSON?: { sketchesData?: unknown; viewportData?: unknown } };
+	initialProject: {
+		_valueJSON?: { sketchesData?: unknown; viewportData?: unknown };
+	};
 };
 
 const ProjectProvider = ({ children, initialProject }: Props) => {
