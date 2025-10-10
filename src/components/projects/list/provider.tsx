@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 
 type Props = {
 	children: React.ReactNode;
-	initialProjects: any;
+	initialProjects: { _valueJSON?: unknown };
 };
 
 const ProjectsProvider = ({ children, initialProjects }: Props) => {
@@ -13,7 +13,9 @@ const ProjectsProvider = ({ children, initialProjects }: Props) => {
 
 	useEffect(() => {
 		if (initialProjects?._valueJSON) {
-			const projectsData = initialProjects._valueJSON;
+			const projectsData = Array.isArray(initialProjects._valueJSON)
+				? initialProjects._valueJSON
+				: [];
 			dispatch(
 				fetchProjectSuccess({
 					projects: projectsData,

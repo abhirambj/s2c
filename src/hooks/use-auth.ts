@@ -1,6 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { SignOutAction } from "@convex-dev/auth/server";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,7 +24,7 @@ type SignUpData = z.infer<typeof signUpSchema>;
 
 export const useAuth = () => {
 	const { signIn, signOut } = useAuthActions();
-	const router = useRouter;
+	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const signInForm = useForm<SignInData>({

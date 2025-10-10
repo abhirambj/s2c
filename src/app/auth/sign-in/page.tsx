@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/hooks/user-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import Google from "@/components/buttons/oauth/google";
@@ -143,7 +143,7 @@ export default function LoginPage() {
 
 				<div className="bg-muted rounded-(--radius) border p-3">
 					<p className="text-accent-foreground text-center text-sm">
-						Don't have an account ?
+						Don&apos;t have an account?
 						<Button asChild variant="link" className="px-2">
 							<Link href="#">Create account</Link>
 						</Button>
