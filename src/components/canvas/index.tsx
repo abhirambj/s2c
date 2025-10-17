@@ -5,6 +5,13 @@ import React from "react";
 import TextSideBar from "./text-sidebar";
 import { cn } from "@/lib/utils";
 import ShapesRenderer from "./shapes";
+import { RectanglePreview } from "./shapes/rectangle/preview";
+import { FramePreview } from "./shapes/frame/preview";
+import { ElipsePreview } from "./shapes/elipse/preview";
+import { ArrowPreview } from "./shapes/arrow/preview";
+import { LinePreview } from "./shapes/line/preview";
+import { FreeDrawStrokePreview } from "./shapes/stroke/preview";
+import { SelectionOverlay } from "./shapes/selection";
 
 const InfiniteCanvas = () => {
 	const {
@@ -22,6 +29,9 @@ const InfiniteCanvas = () => {
 		isSidebarOpen,
 		hasSelectedText,
 	} = useInfiniteCanvas();
+
+	const draftShape = getDraftShape();
+	const freeDrawPoints = getFreeDrawPoints();
 
 	return (
 		<>
@@ -71,6 +81,47 @@ const InfiniteCanvas = () => {
 							// exportDesign={exportDesign}
 						/>
 					))}
+					{shapes.map((shape) => (
+						<SelectionOverlay
+							key={`selection-${shape.id}`}
+							shape={shape}
+							isSelected={!!selectedShapes[shape.id]}
+						/>
+					))}
+					{draftShape && draftShape.type === "frame" && (
+						<FramePreview
+							startWorld={draftShape.startWorld}
+							currentWorld={draftShape.currentWorld}
+						/>
+					)}
+					{draftShape && draftShape.type === "rect" && (
+						<RectanglePreview
+							startWorld={draftShape.startWorld}
+							currentWorld={draftShape.currentWorld}
+						/>
+					)}
+					{draftShape && draftShape.type === "ellipse" && (
+						<ElipsePreview
+							startWorld={draftShape.startWorld}
+							currentWorld={draftShape.currentWorld}
+						/>
+					)}
+					{draftShape && draftShape.type === "arrow" && (
+						<ArrowPreview
+							startWorld={draftShape.startWorld}
+							currentWorld={draftShape.currentWorld}
+						/>
+					)}
+					{draftShape && draftShape.type === "line" && (
+						<LinePreview
+							startWorld={draftShape.startWorld}
+							currentWorld={draftShape.currentWorld}
+						/>
+					)}
+					{currentTool === "freedraw" &&
+						freeDrawPoints.length > 1 && (
+							<FreeDrawStrokePreview points={freeDrawPoints} />
+						)}
 				</div>
 			</div>
 		</>

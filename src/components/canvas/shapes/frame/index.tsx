@@ -21,14 +21,14 @@ export const Frame = ({
 					top: shape.y,
 					width: shape.w,
 					height: shape.h,
-					borderRadius: "12px", // Slightly more rounded for modern feel
+					borderRadius: "12px",
 				}}
 			/>
 			<div
 				className="absolute pointer-events-none whitespace-nowrap text-xs font-medium text-white/80 select-none"
 				style={{
 					left: shape.x,
-					top: shape.y - 24, // Position above the frame
+					top: shape.y - 24,
 					fontSize: "11px",
 					lineHeight: "1.2",
 				}}
