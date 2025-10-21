@@ -128,19 +128,13 @@ const TextSideBar = ({ isOpen }: Props) => {
 	};
 
 	const handleColorChange = (color: string) => {
-		// Accept rgb(...) or #hex; normalize to hex when possible and update shape
 		const normalized = normalizeColor(color);
-		setColorInput(normalized ?? color);
+		setColorInput(normalized);
 		if (isHexString(normalized)) {
 			updateTextProperty("fill", normalized);
-		} else if (isRgbString(color)) {
-			// If original was rgb and we could convert, rgbToHex returned a hex
-			const hex = rgbToHex(color);
-			if (hex) updateTextProperty("fill", hex);
 		}
 	};
 
-	// Sync colorInput when selectedTextShape.fill changes so picker/input round-trip
 	React.useEffect(() => {
 		const normalized = normalizeColor(selectedTextShape?.fill ?? undefined);
 		setColorInput(normalized);

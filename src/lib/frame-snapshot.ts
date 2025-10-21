@@ -12,7 +12,7 @@ export const isShapeInsideFrame = (
 	switch (shape.type) {
 		case "rect":
 		case "ellipse":
-		case "frame":
+		case "frame": {
 			const centerX = shape.x + shape.w / 2;
 			const centerY = shape.y + shape.h / 2;
 			return (
@@ -21,16 +21,17 @@ export const isShapeInsideFrame = (
 				centerY >= frameTop &&
 				centerY <= frameBottom
 			);
-
-		case "text":
+		}
+		case "text": {
 			return (
 				shape.x >= frameLeft &&
 				shape.x <= frameRight &&
 				shape.y >= frameTop &&
 				shape.y <= frameBottom
 			);
+		}
 
-		case "freedraw":
+		case "freedraw": {
 			return shape.points.some(
 				(point) =>
 					point.x >= frameLeft &&
@@ -38,9 +39,10 @@ export const isShapeInsideFrame = (
 					point.y >= frameTop &&
 					point.y <= frameBottom
 			);
+		}
 
 		case "line":
-		case "arrow":
+		case "arrow": {
 			const startInside =
 				shape.startX >= frameLeft &&
 				shape.startX <= frameRight &&
@@ -52,7 +54,7 @@ export const isShapeInsideFrame = (
 				shape.endY >= frameTop &&
 				shape.endY <= frameBottom;
 			return startInside || endInside;
-
+		}
 		default:
 			return false;
 	}
@@ -128,7 +130,7 @@ export const renderShapeOnCanvas = (
 			ctx.fillText(shape.text, textRelativeX, textRelativeY);
 			break;
 		}
-		case "freedraw":
+		case "freedraw": {
 			if (shape.points.length > 1) {
 				ctx.strokeStyle = shape.stroke || "rgb(255, 255, 255)";
 				ctx.lineWidth = shape.strokeWidth || 2;
@@ -144,7 +146,8 @@ export const renderShapeOnCanvas = (
 				ctx.stroke();
 			}
 			break;
-		case "line":
+		}
+		case "line": {
 			ctx.strokeStyle = shape.stroke || "rgb(255, 255, 255)";
 			ctx.lineWidth = shape.strokeWidth || 2;
 			ctx.beginPath();
@@ -152,6 +155,7 @@ export const renderShapeOnCanvas = (
 			ctx.lineTo(shape.endX - frameX, shape.endY - frameY);
 			ctx.stroke();
 			break;
+		}
 		case "arrow": {
 			ctx.strokeStyle = shape.stroke || "rgb(255, 255, 255)";
 			ctx.lineWidth = shape.strokeWidth ?? 2;
@@ -217,7 +221,6 @@ export const generateFrameSnapshot = (
 	});
 
 	ctx.restore();
-	console.log("All shapes rendered");
 
 	return new Promise((resolve, reject) => {
 		canvas.toBlob(
