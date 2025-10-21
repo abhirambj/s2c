@@ -264,7 +264,7 @@ const TextSideBar = ({ isOpen }: Props) => {
 						}
 						className="data-[state=on]:bg-blue-500 data-[state=on]:text-white"
 					>
-						placeholder="#ffffff"
+						<Strikethrough className="w-4 h-4" />
 					</Toggle>
 				</div>
 				<div className="space-y-2">
@@ -289,9 +289,14 @@ const TextSideBar = ({ isOpen }: Props) => {
 							onClick={() => {
 								const input = document.createElement("input");
 								input.type = "color";
-								input.value =
-									selectedTextShape?.fill ??
-									"rgb(255, 255, 255)";
+								{
+									const v = normalizeColor(
+										selectedTextShape?.fill ?? undefined
+									);
+									input.value = isHexString(v)
+										? v
+										: "#ffffff";
+								}
 								input.onchange = (e) => {
 									const color = (e.target as HTMLInputElement)
 										.value;

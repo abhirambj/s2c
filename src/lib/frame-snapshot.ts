@@ -117,10 +117,9 @@ export const renderShapeOnCanvas = (
 			break;
 		}
 		case "frame": {
-			// Skip drawing the frame itself inside the snapshot.
 			break;
 		}
-		case "text":
+		case "text": {
 			const textRelativeX = shape.x - frameX;
 			const textRelativeY = shape.y - frameY;
 			ctx.fillStyle = shape.fill || "#fff";
@@ -128,6 +127,7 @@ export const renderShapeOnCanvas = (
 			ctx.textBaseline = "top";
 			ctx.fillText(shape.text, textRelativeX, textRelativeY);
 			break;
+		}
 		case "freedraw":
 			if (shape.points.length > 1) {
 				ctx.strokeStyle = shape.stroke || "rgb(255, 255, 255)";
