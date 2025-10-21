@@ -77,9 +77,9 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 	useEffect(() => {
 		if (guideImages && guideImages.length > 0) {
 			const serverImages: MoodBoardImage[] = guideImages.map(
-				(img: any) => ({
+				(img: MoodBoardImage) => ({
 					id: img.id,
-					preview: img.url,
+					preview: img.url ?? "",
 					storageId: img.storageId,
 					uploaded: true,
 					uploading: false,
@@ -109,9 +109,11 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 							blobUrlsRef.current.delete(
 								mergedImages[clientIndex].preview
 							);
-							URL.revokeObjectURL(
-								mergedImages[clientIndex].preview
-							);
+							try {
+								URL.revokeObjectURL(
+									mergedImages[clientIndex].preview
+								);
+							} catch {}
 						}
 						mergedImages[clientIndex] = serverImg;
 					}
@@ -272,14 +274,15 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 		if (images.length > 0) {
 			uploadPendingImages();
 		}
-	}, [images, setValue, getValues]);
+	}, [images, setValue, getValues, uploadImage]);
 
 	useEffect(() => {
 		return () => {
-			blobUrlsRef.current.forEach((url) => {
+			const currentBlobUrls = blobUrlsRef.current;
+			currentBlobUrls.forEach((url) => {
 				URL.revokeObjectURL(url);
 			});
-			blobUrlsRef.current.clear();
+			currentBlobUrls.clear();
 		};
 	}, []);
 

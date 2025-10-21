@@ -38,9 +38,9 @@ export const Frame = ({
 			<div
 				className="absolute pointer-events-auto flex gap-4"
 				style={{
-					left: shape.x + shape.w - 235, // Position at top right, accounting for button width
-					top: shape.y - 36, // Position above the frame with some spacing
-					zIndex: 1000, // Ensure button is on top
+					left: shape.x + shape.w - 235,
+					top: shape.y - 36,
+					zIndex: 1000,
 				}}
 				onClick={(e) => {
 					e.stopPropagation();

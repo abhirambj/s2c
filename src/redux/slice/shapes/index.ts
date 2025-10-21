@@ -260,7 +260,7 @@ const makeText = (p: {
 	type: "text",
 	x: p.x,
 	y: p.y,
-	text: p.text ?? "Type here...", // Start with placeholder text
+	text: p.text ?? "Type here...",
 	fontSize: p.fontSize ?? 16,
 	fontFamily: p.fontFamily ?? "Inter, sans-serif",
 	fontWeight: p.fontWeight ?? 400,
@@ -272,7 +272,7 @@ const makeText = (p: {
 	textTransform: p.textTransform ?? "none",
 	stroke: p.stroke ?? DEFAULTS.stroke,
 	strokeWidth: p.strokeWidth ?? DEFAULTS.strokeWidth,
-	fill: p.fill ?? "#ffffff",
+	fill: p.fill ?? "rgb(255, 255, 255)",
 });
 
 const makeGeneratedUI = (p: {
@@ -280,13 +280,13 @@ const makeGeneratedUI = (p: {
 	y: number;
 	w: number;
 	h: number;
-	uiSpecData: string | null; // HTML markup as string
+	uiSpecData: string | null;
 	sourceFrameId: string;
 	id?: string;
 	stroke?: string;
 	strokeWidth?: number;
 	fill?: string | null;
-	isWorkflowPage?: boolean; // Flag to identify workflow pages
+	isWorkflowPage?: boolean;
 }): GeneratedUIShape => ({
 	id: p.id ?? nanoid(),
 	type: "generatedui",
@@ -297,7 +297,7 @@ const makeGeneratedUI = (p: {
 	uiSpecData: p.uiSpecData,
 	sourceFrameId: p.sourceFrameId,
 	isWorkflowPage: p.isWorkflowPage,
-	stroke: "transparent", // No border for generated UI
+	stroke: "transparent",
 	strokeWidth: 0,
 	fill: p.fill ?? null,
 });

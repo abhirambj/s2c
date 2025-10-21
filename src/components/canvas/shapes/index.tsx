@@ -24,10 +24,10 @@ const ShapesRenderer = ({
 	exportDesign: (generatedUUId: string, element: HTMLElement | null) => void;
 }) => {
 	switch (shape.type) {
-		// case "frame":
-		// 	return (
-		// 		<Frame shape={shape} toggleInspiration={toggleInspiration} />
-		// 	);
+		case "frame":
+			return (
+				<Frame shape={shape} toggleInspiration={toggleInspiration} />
+			);
 		case "rect":
 			return <Rectangle shape={shape} />;
 		case "ellipse":

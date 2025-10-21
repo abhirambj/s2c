@@ -68,7 +68,7 @@ const TextSideBar = ({ isOpen }: Props) => {
 		.find((shape) => shape?.type === "text") as TextShape | undefined;
 
 	const [colorInput, setColorInput] = React.useState(
-		selectedTextShape?.fill ?? "#ffffff"
+		selectedTextShape?.fill ?? "rgb(255, 255, 255)"
 	);
 
 	const updateTextProperty = (
@@ -225,19 +225,21 @@ const TextSideBar = ({ isOpen }: Props) => {
 							className="bg-white/5 border-white/10 text-white flex-1"
 							value={colorInput}
 							onChange={(e) => handleColorChange(e.target.value)}
-							placeholder="#ffffff"
+							placeholder="rgb(255, 255, 255)"
 						/>
 						<div
 							className="w-10 h-10 rounded border border-white/20 cursor-pointer"
 							style={{
 								backgroundColor:
-									selectedTextShape?.fill || "#ffffff",
+									selectedTextShape?.fill ??
+									"rgb(255, 255, 255)",
 							}}
 							onClick={() => {
 								const input = document.createElement("input");
 								input.type = "color";
 								input.value =
-									selectedTextShape?.fill || "#ffffff";
+									selectedTextShape?.fill ??
+									"rgb(255, 255, 255)";
 								input.onchange = (e) => {
 									const color = (e.target as HTMLInputElement)
 										.value;
