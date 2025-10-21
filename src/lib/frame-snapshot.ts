@@ -76,35 +76,32 @@ export const renderShapeOnCanvas = (
 ) => {
 	ctx.save();
 	switch (shape.type) {
-		case "rect":
-		case "ellipse":
-		case "frame":
+		case "rect": {
 			const relativeX = shape.x - frameX;
 			const relativeY = shape.y - frameY;
-
-			if (shape.type === "text" || shape.type === "frame") {
-				ctx.strokeStyle =
-					shape.stroke && shape.stroke !== "transparent"
-						? shape.stroke
-						: "#fff";
-				ctx.lineWidth = shape.strokeWidth || 2;
-
-				const borderRadius = shape.type === "rect" ? 8 : 0;
+			const shouldStroke =
+				!!shape.stroke &&
+				shape.stroke !== "transparent" &&
+				(shape.strokeWidth ?? 0) > 0;
+			if (shouldStroke) {
+				ctx.strokeStyle = shape.stroke!;
+				ctx.lineWidth = shape.strokeWidth ?? 2;
 				ctx.beginPath();
-				ctx.roundRect(
-					relativeX,
-					relativeY,
-					shape.w,
-					shape.h,
-					borderRadius
-				);
+				ctx.roundRect(relativeX, relativeY, shape.w, shape.h, 8);
 				ctx.stroke();
-			} else if (shape.type === "ellipse") {
-				ctx.strokeStyle =
-					shape.stroke && shape.stroke !== "transparent"
-						? shape.stroke
-						: "#fff";
-				ctx.lineWidth = shape.strokeWidth || 2;
+			}
+			break;
+		}
+		case "ellipse": {
+			const relativeX = shape.x - frameX;
+			const relativeY = shape.y - frameY;
+			const shouldStroke =
+				!!shape.stroke &&
+				shape.stroke !== "transparent" &&
+				(shape.strokeWidth ?? 0) > 0;
+			if (shouldStroke) {
+				ctx.strokeStyle = shape.stroke!;
+				ctx.lineWidth = shape.strokeWidth ?? 2;
 				ctx.beginPath();
 				ctx.ellipse(
 					relativeX + shape.w / 2,
@@ -118,6 +115,11 @@ export const renderShapeOnCanvas = (
 				ctx.stroke();
 			}
 			break;
+		}
+		case "frame": {
+			// Skip drawing the frame itself inside the snapshot.
+			break;
+		}
 		case "text":
 			const textRelativeX = shape.x - frameX;
 			const textRelativeY = shape.y - frameY;
@@ -150,21 +152,20 @@ export const renderShapeOnCanvas = (
 			ctx.lineTo(shape.endX - frameX, shape.endY - frameY);
 			ctx.stroke();
 			break;
-		case "arrow":
+		case "arrow": {
 			ctx.strokeStyle = shape.stroke || "rgb(255, 255, 255)";
-			ctx.lineWidth = shape.strokeWidth || 2;
+			ctx.lineWidth = shape.strokeWidth ?? 2;
 			ctx.beginPath();
 			ctx.moveTo(shape.startX - frameX, shape.startY - frameY);
 			ctx.lineTo(shape.endX - frameX, shape.endY - frameY);
 			ctx.stroke();
 
 			const headLength = 10;
-
 			const angle = Math.atan2(
 				shape.endY - shape.startY,
 				shape.endX - shape.startX
 			);
-			const fillStyle = shape.stroke || "rgb(255, 255, 255)";
+			ctx.fillStyle = shape.stroke || "rgb(255, 255, 255)";
 			ctx.beginPath();
 			ctx.moveTo(shape.endX - frameX, shape.endY - frameY);
 			ctx.lineTo(
@@ -182,6 +183,7 @@ export const renderShapeOnCanvas = (
 			ctx.closePath();
 			ctx.fill();
 			break;
+		}
 		default:
 			break;
 	}
@@ -241,5 +243,5 @@ export const downloadBlob = (blob: Blob, filename: string): void => {
 	document.body.appendChild(link);
 	link.click();
 	document.body.removeChild(link);
-	URL.revokeObjectURL(url);
+	setTimeout(() => URL.revokeObjectURL(url), 100);
 };

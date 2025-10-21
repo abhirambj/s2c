@@ -28,6 +28,45 @@ import {
 } from "lucide-react";
 import React from "react";
 
+const isRgbString = (s?: string) =>
+	!!s && /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/i.test(s);
+const isHexString = (s?: string) =>
+	!!s && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s);
+
+const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
+
+const componentToHex = (c: number) => {
+	const hex = clamp(c).toString(16);
+	return hex.length === 1 ? `0${hex}` : hex;
+};
+
+const rgbToHex = (rgb: string) => {
+	const m = rgb.match(/\d{1,3}/g);
+	if (!m || m.length < 3) return undefined;
+	const [r, g, b] = m.map((v) => clamp(Number(v)));
+	return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+};
+
+const expandShortHex = (hex: string) => {
+	if (/^#([0-9a-f]{3})$/i.test(hex)) {
+		const h = hex.replace(/^#/, "");
+		return `#${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`;
+	}
+	return hex;
+};
+
+const normalizeColor = (value?: string) => {
+	if (!value) return "#ffffff";
+	if (isRgbString(value)) {
+		const hex = rgbToHex(value);
+		return hex ?? "#ffffff";
+	}
+	if (isHexString(value)) {
+		return expandShortHex(value.toLowerCase());
+	}
+	return value;
+};
+
 type Props = {
 	isOpen: boolean;
 };
@@ -67,8 +106,9 @@ const TextSideBar = ({ isOpen }: Props) => {
 		.map((id) => shapesEntities[id])
 		.find((shape) => shape?.type === "text") as TextShape | undefined;
 
-	const [colorInput, setColorInput] = React.useState(
-		selectedTextShape?.fill ?? "rgb(255, 255, 255)"
+	// Store canonical color as 6-char hex when possible.
+	const [colorInput, setColorInput] = React.useState<string>(() =>
+		normalizeColor(selectedTextShape?.fill ?? undefined)
 	);
 
 	const updateTextProperty = (
@@ -88,11 +128,23 @@ const TextSideBar = ({ isOpen }: Props) => {
 	};
 
 	const handleColorChange = (color: string) => {
-		setColorInput(color);
-		if (/^#[0-9A-F]{6}$/i.test(color) || /^#[0-9A-F]{3}$/i.test(color)) {
-			updateTextProperty("fill", color);
+		// Accept rgb(...) or #hex; normalize to hex when possible and update shape
+		const normalized = normalizeColor(color);
+		setColorInput(normalized ?? color);
+		if (isHexString(normalized)) {
+			updateTextProperty("fill", normalized);
+		} else if (isRgbString(color)) {
+			// If original was rgb and we could convert, rgbToHex returned a hex
+			const hex = rgbToHex(color);
+			if (hex) updateTextProperty("fill", hex);
 		}
 	};
+
+	// Sync colorInput when selectedTextShape.fill changes so picker/input round-trip
+	React.useEffect(() => {
+		const normalized = normalizeColor(selectedTextShape?.fill ?? undefined);
+		setColorInput(normalized);
+	}, [selectedTextShape?.fill]);
 
 	if (!isOpen || !selectedTextShape) return null;
 
@@ -212,7 +264,7 @@ const TextSideBar = ({ isOpen }: Props) => {
 						}
 						className="data-[state=on]:bg-blue-500 data-[state=on]:text-white"
 					>
-						<Strikethrough className="w-4 h-4" />
+						placeholder="#ffffff"
 					</Toggle>
 				</div>
 				<div className="space-y-2">
@@ -225,7 +277,7 @@ const TextSideBar = ({ isOpen }: Props) => {
 							className="bg-white/5 border-white/10 text-white flex-1"
 							value={colorInput}
 							onChange={(e) => handleColorChange(e.target.value)}
-							placeholder="rgb(255, 255, 255)"
+							placeholder="#ffffff"
 						/>
 						<div
 							className="w-10 h-10 rounded border border-white/20 cursor-pointer"

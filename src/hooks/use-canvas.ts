@@ -919,6 +919,13 @@ export const useInfiniteCanvas = () => {
 export const useFrame = (shape: FrameShape) => {
 	const dispatch = useAppDispatch();
 	const [isGenerating, setIsGenerating] = useState(false);
+	const isMountedRef = useRef(true);
+
+	useEffect(() => {
+		return () => {
+			isMountedRef.current = false;
+		};
+	}, []);
 
 	const allShapes = useAppSelector((state) =>
 		Object.values(state.shapes.shapes?.entities || {}).filter(
@@ -946,7 +953,16 @@ export const useFrame = (shape: FrameShape) => {
 			if (projectId) {
 				formData.append("projectId", projectId);
 			}
-		} catch {}
+			// TODO: Send formData to API endpoint
+			// await fetch('/api/generate-design', { method: 'POST', body: formData });
+		} catch (error) {
+			console.error("Failed to generate frame snapshot:", error);
+			// TODO: Show error notification to user
+		} finally {
+			if (isMountedRef.current) {
+				setIsGenerating(false);
+			}
+		}
 	};
 
 	return {

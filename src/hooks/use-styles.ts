@@ -1,6 +1,6 @@
 import { useMutation } from "convex/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
@@ -43,36 +43,39 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 	);
 	const addMoodBoardImage = useMutation(api.moodboard.addMoodBoardImage);
 
-	const uploadImage = async (
-		file: File
-	): Promise<{ storageId: string; url?: string } | undefined> => {
-		try {
-			const uploadUrl = await generateUploadUrl();
+	const uploadImage = useCallback(
+		async (
+			file: File
+		): Promise<{ storageId: string; url?: string } | undefined> => {
+			try {
+				const uploadUrl = await generateUploadUrl();
 
-			const result = await fetch(uploadUrl, {
-				method: "POST",
-				headers: { "Content-Type": file.type },
-				body: file,
-			});
-
-			if (!result.ok) {
-				throw new Error(`Upload failed: ${result.statusText}`);
-			}
-
-			const { storageId } = await result.json();
-
-			if (projectId) {
-				await addMoodBoardImage({
-					projectId: projectId as Id<"projects">,
-					storageId: storageId as Id<"_storage">,
+				const result = await fetch(uploadUrl, {
+					method: "POST",
+					headers: { "Content-Type": file.type },
+					body: file,
 				});
-			}
 
-			return { storageId };
-		} catch (error) {
-			console.error(error);
-		}
-	};
+				if (!result.ok) {
+					throw new Error(`Upload failed: ${result.statusText}`);
+				}
+
+				const { storageId } = await result.json();
+
+				if (projectId) {
+					await addMoodBoardImage({
+						projectId: projectId as Id<"projects">,
+						storageId: storageId as Id<"_storage">,
+					});
+				}
+
+				return { storageId };
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		[addMoodBoardImage, generateUploadUrl, projectId]
+	);
 
 	useEffect(() => {
 		if (guideImages && guideImages.length > 0) {
