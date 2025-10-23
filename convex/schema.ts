@@ -44,7 +44,7 @@ const schema = defineSchema({
 		description: v.optional(v.string()),
 		styleGuide: v.optional(v.string()),
 		sketchesData: v.any(),
-		viewPortData: v.optional(v.any()),
+		viewportData: v.optional(v.any()),
 		generatedDesignsData: v.optional(v.any()),
 		thumbnail: v.optional(v.string()),
 		moodBoardImages: v.optional(v.array(v.string())),
